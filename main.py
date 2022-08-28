@@ -14,7 +14,9 @@ class Game(arcade.Window):
     def __init__(self):
         super().__init__(stg.WINDOW_WIDTH, stg.WINDOW_HEIGHT, stg.WINDOW_TITLE)
         self.player = player.Player()
-        self.set_vsync(True)
+        # self.set_vsync(False)
+        self.set_fullscreen()
+        self.set_update_rate(1/60)
         self.EXIT = False
 
     def setup(self):
@@ -46,7 +48,6 @@ class Game(arcade.Window):
 
 def main():
     window = Game()
-    window.set_fullscreen()
     window.setup()
     arcade.run()
 
