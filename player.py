@@ -3,6 +3,9 @@ import entity
 import settings as stg
 from pygame.math import Vector2 as Vec
 
+import skill
+from typing import *
+
 
 class Player(entity.BaseEntity):
     def __init__(self, game):
@@ -10,6 +13,9 @@ class Player(entity.BaseEntity):
         self.dst = Vec(stg.WINDOW_HEIGHT // 2, stg.WINDOW_WIDTH // 2)
         self.change_dst = False
         self.sprite = arcade.sprite.Sprite('based.png')
+        self.skills: List[skill.Skill] = [
+            skill.Skill(2, 'radi.png', scale=.3)
+        ]
 
     def update_dst(self, x, y) -> None:
         self.dst = Vec(x, y)
@@ -39,6 +45,8 @@ class Player(entity.BaseEntity):
     def on_draw(self) -> None:
         self.sprite.set_position(self.pos.x, self.pos.y)
         self.sprite.draw()
+        for i in range(len(self.skills)):
+            self.skills[i].on_draw(i)
         # arcade.draw_rectangle_filled(self.pos.x, self.pos.y, 25, 25, arcade.color.LIME)
 
     def on_mouse_motion(self, x, y, dx, dy):
