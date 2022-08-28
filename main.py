@@ -35,12 +35,6 @@ class Game(arcade.Window):
         #     )
         pass
 
-    def on_draw(self):
-        self.clear(arcade.color.BLACK)
-        self.player.on_draw()
-        for enemy_i in self.enemies:
-            enemy_i.on_draw()
-
     def on_update(self, delta_time: float):
         self.enemy_spawn_t_counter += delta_time * random.gauss(1.1, 0.1)
         if self.enemy_spawn_t_counter >= enemy_spawn_cool_down:
@@ -56,6 +50,12 @@ class Game(arcade.Window):
         self.player.on_update(delta_time)
         for enemy_i in self.enemies:
             enemy_i.on_update(delta_time)
+
+    def on_draw(self):
+        self.clear(arcade.color.BLACK)
+        self.player.on_draw()
+        for enemy_i in self.enemies:
+            enemy_i.on_draw()
 
     def on_key_press(self, symbol: int, modifiers: int):
         if symbol == arcade.key.ESCAPE:
