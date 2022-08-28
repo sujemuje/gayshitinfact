@@ -16,6 +16,8 @@ class Enemy(entity.BaseEntity):
         self.dst = game.player.pos
         self.rnd_counter = 0
         self.sprite = arcade.Sprite('radi.png', 0.5)
+        self.applied_effect = None
+        self.applied_effect_count = 0
 
     def move_rand(self):
         rand_vec = pygame.math.Vector2(

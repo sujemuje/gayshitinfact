@@ -61,6 +61,8 @@ class Game(arcade.Window):
         if symbol == arcade.key.ESCAPE:
             self.EXIT = True
 
+        self.player.on_key_press(symbol, modifiers)
+
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
         self.player.on_mouse_press(x, y, button, modifiers)
 

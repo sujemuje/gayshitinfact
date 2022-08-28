@@ -4,6 +4,7 @@ import settings as stg
 from pygame.math import Vector2 as Vec
 
 import skill
+import skills
 from typing import *
 
 
@@ -13,8 +14,8 @@ class Player(entity.BaseEntity):
         self.dst = Vec(stg.WINDOW_HEIGHT // 2, stg.WINDOW_WIDTH // 2)
         self.change_dst = False
         self.sprite = arcade.sprite.Sprite('based.png')
-        self.skills: List[skill.Skill] = [
-            skill.Skill(2, 'radi.png', scale=.3)
+        self.skills: List[skill.BaseSkill] = [
+            skills.SkillQ(self)
         ]
 
     def update_dst(self, x, y) -> None:
@@ -22,6 +23,9 @@ class Player(entity.BaseEntity):
 
     def on_update(self, dt: float) -> None:
         # move
+        for s in self.skills:
+            s.on_update(dt)
+
         if self.pos != self.dst:
             if self.movable():
                 dist_to_dst = (self.pos - self.dst).length()
@@ -53,3 +57,18 @@ class Player(entity.BaseEntity):
         if self.change_dst:
             self.update_dst(x, y)
 
+    def on_key_press(self, key, modifier) -> None:
+        keys = [
+            arcade.key.Q,
+            arcade.key.W,
+            arcade.key.E,
+            arcade.key.R,
+        ]
+        if key in keys:
+            try:
+                self.skills[keys.index(key)].use(
+                    self.game._mouse_x,
+                    self.game._mouse_y
+                )
+            except KeyError:
+                pass
