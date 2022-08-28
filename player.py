@@ -37,6 +37,13 @@ class Player(entity.BaseEntity):
             else:
                 pass
 
+    def on_draw(self) -> None:
+        self.sprite.set_position(self.pos.x, self.pos.y)
+        self.sprite.draw()
+        for i in range(len(self.skills)):
+            self.skills[i].on_draw(i)
+        # arcade.draw_rectangle_filled(self.pos.x, self.pos.y, 25, 25, arcade.color.LIME)
+
     def on_mouse_press(self, x, y, button, modifiers) -> None:
         if button == arcade.MOUSE_BUTTON_RIGHT:
             self.update_dst(x, y)
@@ -45,13 +52,6 @@ class Player(entity.BaseEntity):
     def on_mouse_release(self, x, y, button, modifiers) -> None:
         if button == arcade.MOUSE_BUTTON_RIGHT:
             self.change_dst = False
-
-    def on_draw(self) -> None:
-        self.sprite.set_position(self.pos.x, self.pos.y)
-        self.sprite.draw()
-        for i in range(len(self.skills)):
-            self.skills[i].on_draw(i)
-        # arcade.draw_rectangle_filled(self.pos.x, self.pos.y, 25, 25, arcade.color.LIME)
 
     def on_mouse_motion(self, x, y, dx, dy):
         if self.change_dst:

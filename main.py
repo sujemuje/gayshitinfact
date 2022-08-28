@@ -1,55 +1,60 @@
+# GENERAL IMPORTS
+from typing import *
 import random
-
 import arcade
 import pygame
-# MY IMPORTS
+
+# LOCAL IMPORTS
 import player
 import enemy
-import settings
 import settings as stg
 import sys
-
-
-from typing import *
 
 
 Vec = pygame.math.Vector2
 
 
-enemy_spawn_cool_down = 1
+
 
 
 class Game(arcade.Window):
     def __init__(self):
         super().__init__(stg.WINDOW_WIDTH, stg.WINDOW_HEIGHT, stg.WINDOW_TITLE)
-        self.player = player.Player(self)
-        self.set_vsync(True)
+        self.set_fullscreen()
+        self.set_update_rate(1/60)
         self.EXIT = False
+
+        # Entities
+        self.player = player.Player(self)
         self.enemies: List[enemy.Enemy] = []
+        self.enemy_spawn_cool_down = 0.1
         self.enemy_spawn_t_counter = 0
 
     def setup(self):
-        # for _ in range(5):
-        #     self.enemies.append(
-        #         enemy.Enemy(0, 0, 100, 100, 200, self)
-        #     )
-        pass
+        print("chuj")
 
-    def on_update(self, delta_time: float):
-        self.enemy_spawn_t_counter += delta_time * random.gauss(1.1, 0.1)
-        if self.enemy_spawn_t_counter >= enemy_spawn_cool_down:
-            self.enemy_spawn_t_counter = 0
-            pos = Vec(random.uniform(-1, 1), random.uniform(-1, 1)).normalize() * settings.WINDOW_R
-            self.enemies.append(
-                enemy.Enemy(pos.x, pos.y, 100, 100, 200, self)
-            )
-
+    def on_update(self, dt: float):
         if self.EXIT:
             sys.exit(0)
 
-        self.player.on_update(delta_time)
+        # Spawning enemies randomly
+        self.enemy_spawn_t_counter += dt * random.gauss(1.1, 0.1)
+        if self.enemy_spawn_t_counter >= self.enemy_spawn_cool_down:
+            self.enemy_spawn_t_counter = 0
+            pos = Vec(
+                random.uniform(-1, 1),
+                random.uniform(-1, 1)
+            ).normalize() * stg.WINDOW_R + Vec(stg.WINDOW_WIDTH//2, stg.WINDOW_HEIGHT//2)
+            self.enemies.append(
+                enemy.Enemy(
+                    x=pos.x, y=pos.y,
+                    hp=100, atk=100, vel=2000,
+                    game=self)
+            )
+
+        self.player.on_update(dt)
         for enemy_i in self.enemies:
-            enemy_i.on_update(delta_time)
+            enemy_i.on_update(dt)
 
     def on_draw(self):
         self.clear(arcade.color.BLACK)
@@ -75,7 +80,6 @@ class Game(arcade.Window):
 
 def main():
     window = Game()
-    window.set_fullscreen()
     window.setup()
     arcade.run()
 

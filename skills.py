@@ -21,13 +21,9 @@ class FireballProjectile(particle.BaseParticle):
             self.rm = True
         if -500 > self.pos.y or self.pos.y > settings.WINDOW_HEIGHT + 500:
             self.rm = True
-        for i in range(len(self.player.game.enemies)):
-            if self.sprite.collides_with_sprite(self.player.game.enemies[i].sprite):
-                self.player.game.enemies[i] = None
-        try:
-            self.player.game.enemies.remove(None)
-        except:
-            pass  # XD
+        for enemy in self.player.game.enemies:
+            if self.sprite.collides_with_sprite(enemy.sprite):
+                self.player.game.enemies.remove(enemy)
 
     def on_draw(self) -> None:
         self.sprite.set_position(self.pos.x, self.pos.y)
@@ -44,11 +40,10 @@ class SkillQ(skill.BaseSkill):
 
     def on_update(self, dt) -> None:
         super().on_update(dt)  # UI interface management in BaseSkill class
-        for i in range(len(self.projectiles)):
-            projectile = self.projectiles[i]
+        for projectile in self.projectiles:
             projectile.on_update(dt)
             if projectile.removable():
-                self.projectiles.pop(i)
+                self.projectiles.remove(projectile)
 
     def on_draw(self, i) -> None:
         super().on_draw(i)  # UI interface management in BaseSkill class
