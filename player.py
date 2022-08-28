@@ -5,10 +5,11 @@ from pygame.math import Vector2 as Vec
 
 
 class Player(entity.BaseEntity):
-    def __init__(self):
-        super().__init__(stg.WINDOW_HEIGHT // 2, stg.WINDOW_WIDTH // 2, 100, 1, stg.BASE_VEL)
+    def __init__(self, game):
+        super().__init__(stg.WINDOW_HEIGHT // 2, stg.WINDOW_WIDTH // 2, 100, 1, stg.BASE_VEL, game)
         self.dst = Vec(stg.WINDOW_HEIGHT // 2, stg.WINDOW_WIDTH // 2)
         self.change_dst = False
+        self.sprite = arcade.sprite.Sprite('based.png')
 
     def update_dst(self, x, y) -> None:
         self.dst = Vec(x, y)
@@ -36,7 +37,9 @@ class Player(entity.BaseEntity):
             self.change_dst = False
 
     def on_draw(self) -> None:
-        arcade.draw_rectangle_filled(self.pos.x, self.pos.y, 25, 25, arcade.color.LIME)
+        self.sprite.set_position(self.pos.x, self.pos.y)
+        self.sprite.draw()
+        # arcade.draw_rectangle_filled(self.pos.x, self.pos.y, 25, 25, arcade.color.LIME)
 
     def on_mouse_motion(self, x, y, dx, dy):
         if self.change_dst:
